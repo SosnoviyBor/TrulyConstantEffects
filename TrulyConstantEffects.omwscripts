@@ -1,2 +1,1 @@
-PLAYER: scripts/TrulyConstantEffects/invisibility.lua
-PLAYER: scripts/TrulyConstantEffects/autoresummon.lua
+PLAYER: scripts/TrulyConstantEffects/main.lua

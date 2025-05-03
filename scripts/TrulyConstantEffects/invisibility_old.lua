@@ -1,3 +1,11 @@
+-- left it just for future reference
+
+
+
+
+
+
+
 local core = require("openmw.core")
 local self = require("openmw.self")
 local async = require("openmw.async")
