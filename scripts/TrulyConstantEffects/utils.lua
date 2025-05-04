@@ -1,29 +1,3 @@
-local core = require("openmw.core")
-local types = require("openmw.types")
-
-
-function GetAllActiveConstSpellsFromEquipment(actor)
-    -- get active const effect spells
-    local constEquipmentSpells = {}
-    for _, spell in pairs(types.Actor.activeSpells(actor)) do
-        local item = spell.item
-
-        -- if spell source is not an item
-        if item ~= nil then
-            local itemRecord = item.type.records[item.recordId]
-            local enchantmentRecord = core.magic.enchantments.records[itemRecord.enchant]
-
-            -- if enchantment on the item is constant
-            if enchantmentRecord.type == core.magic.ENCHANTMENT_TYPE.ConstantEffect then
-                table.insert(constEquipmentSpells, spell)
-            end
-        end
-    end
-
-    return constEquipmentSpells
-end
-
-
 function PrintConstEquipmentSpellsInfo(constEquipmentSpells)
     for id, params in ipairs(constEquipmentSpells) do
         print('active spell '..tostring(id)..':')
@@ -47,9 +21,4 @@ function PrintConstEquipmentSpellsInfo(constEquipmentSpells)
         end
     end
     print("\n\n\n")
-end
-
-
-function IsTableEmpty(list)
-    return next(list) ~= nil
 end
