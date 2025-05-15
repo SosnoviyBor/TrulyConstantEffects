@@ -2,6 +2,7 @@ local core = require("openmw.core")
 local self = require("openmw.self")
 local async = require("openmw.async")
 local types = require("openmw.types")
+local ui = require("openmw.ui")
 local time = require("openmw_aux.time")
 
 require("scripts.TrulyConstantEffects.utils")
@@ -9,15 +10,29 @@ require("scripts.TrulyConstantEffects.consts")
 require("scripts.TrulyConstantEffects.general_utils.tables")
 
 
-local reapplyInvisInstantly = true
-local resummonInstantly = true
+-- including less
 local threshold = 0.5
+-- in seconds
+local invisibilityReapplyDelay = 0
+local summonReapplyDelay = 0
+local showMessageInvis = true
+local showMessageSummon = true
+-- TODO
+local playSound = false
 
 
-local function checkConstSummon()
+local function reapplySpell (spell, effects, item)
+    types.Actor.activeSpells(self):add({
+        id = spell.id,
+        effects = effects,
+        item = item
+    })
+end
+
+
+local function getActiveConstEffectSpells()
     local constEquipmentSpells = {}
 
-    -- get active const effect spells
     -- for whatever reason dead summons and broken invis still count as active spells
     for _, spell in pairs(types.Actor.activeSpells(self)) do
         local item = spell.item
@@ -41,6 +56,14 @@ local function checkConstSummon()
         end
     end
 
+    return constEquipmentSpells
+end
+
+
+-- main function (who would've thought)
+local function main()
+    local constEquipmentSpells = getActiveConstEffectSpells()
+
     -- check each spell if its active *enough*
     -- TODO check if invisibility from 2 items work correctly
     for _, spell in ipairs(constEquipmentSpells) do
@@ -48,7 +71,7 @@ local function checkConstSummon()
         local itemRecord = item.type.records[item.recordId]
         local enchantmentRecord = core.magic.enchantments.records[itemRecord.enchant]
         
-        -- count active and item spells
+        -- count active + item spells
         local spellEffectCount = TableSize(spell.effects)
         local enchEffectCount =  TableSize(enchantmentRecord.effects)
         
@@ -73,6 +96,7 @@ local function checkConstSummon()
                 if not activeEffects[effect.id] then
                     -- invis and summons need to be treated separately
                     if effect.id == core.magic.EFFECT_TYPE.Invisibility then
+                        -- TODO check behavior with 2 items when i figured out how to apply const invis
                         table.insert(missingEffectIds.invisibility, index-1)
                     else
                         table.insert(missingEffectIds.summon, index-1)
@@ -80,31 +104,43 @@ local function checkConstSummon()
                 end
             end
 
-            -- TODO
-            -- add timer for invisibility
-            -- add timer for summons
-            -- add instant
-
             -- Current problem: effects are aplied for 0s instead of constantly
             -- if i dont find a workaround, i'll have to resort to requipping the item...
-            print("Applying the effect back...")
-            types.Actor.activeSpells(self):add({
-                id = spell.id,
-                effects = missingEffectIds,
-            })
+
+            -- Possible solution: generate my own spells and link them to an item with {item} parameter
+            -- Question: how?
+            
+            -- ask if this behavior is intentional
+
+            -- invisbility
+            if not TableIsEmpty(missingEffectIds.invisibility) then
+                if showMessageInvis then ui.showMessage("Applying invisibility back...") end
+                if invisibilityReapplyDelay ~= 0 then
+                    -- registerTimerCallback
+                else
+                    reapplySpell(spell, missingEffectIds.invisibility, item)
+                end
+            end
+            -- summons
+            if not TableIsEmpty(missingEffectIds.summon) then
+                if showMessageSummon then ui.showMessage("Reconjuring your summon back...") end
+                if summonReapplyDelay ~= 0 then
+                    -- registerTimerCallback
+                else
+                    reapplySpell(spell, missingEffectIds.summon, item)
+                end
+            end
         end
     end
 end
 
 
 -- heart of the thing
-time.runRepeatedly(checkConstSummon, 1 * time.second)
+time.runRepeatedly(main, 3 * time.second)
 
 
 -- return {
 --     engineHandlers = {
---         onUpdate = function ()
-
---         end,
+--         onUpdate = checkConstSummon,
 --     }
 -- }

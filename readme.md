@@ -6,6 +6,14 @@ In normal Morrowind if your summon from constant enchantment dies, it doesn't re
 
 Installs like any other OpenMW mod. Not sure about pre-0.49 OpenMW support, but you should use newest builds anyway.
 
+## How it works
+
+I'll explain it once it's done. Still have to figure it out myself.
+
+## Shortcomings
+
+[ TBD ]
+
 ## Credits:
 - **Grey, S3ctor** - helping in learning modding and OpenMW Lua API
 - **Uvirith's Legacy dev team** - giving an idea for the mod
