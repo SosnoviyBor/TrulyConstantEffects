@@ -21,12 +21,14 @@ local showMessageSummon = true
 local playSound = false
 
 
-local function reapplySpell (spell, effects, item)
+local function reapplySpell (spellId, effects, item)
     types.Actor.activeSpells(self):add({
-        id = spell.id,
+        id = spellId,
         effects = effects,
-        item = item
+        item = item,
+        stackable = true
     })
+    -- types.Actor.spells(self):add(spellId)
 end
 
 
@@ -63,8 +65,8 @@ end
 -- main function (who would've thought)
 local function main()
     local constEquipmentSpells = getActiveConstEffectSpells()
+    -- PrintConstEquipmentSpellsInfo(constEquipmentSpells)
 
-    -- check each spell if its active *enough*
     -- TODO check if invisibility from 2 items work correctly
     for _, spell in ipairs(constEquipmentSpells) do
         local item = spell.item
@@ -87,7 +89,7 @@ local function main()
                 activeEffects[effect.id] = true
             end
 
-            -- get all missing effects of the spell
+            -- get all missing effect ids of the spell
             local missingEffectIds = {
                 invisibility = {},
                 summon = {}
@@ -118,7 +120,9 @@ local function main()
                 if invisibilityReapplyDelay ~= 0 then
                     -- registerTimerCallback
                 else
-                    reapplySpell(spell, missingEffectIds.invisibility, item)
+                    -- reapplySpell(item.recordId, missingEffectIds.invisibility, item)
+                    reapplySpell(core.magic.spells.records["tce_invisibility"].id, {0}, item.recordId)
+                    -- reapplySpell(spell.id, missingEffectIds.invisibility, item)
                 end
             end
             -- summons
@@ -127,7 +131,8 @@ local function main()
                 if summonReapplyDelay ~= 0 then
                     -- registerTimerCallback
                 else
-                    reapplySpell(spell, missingEffectIds.summon, item)
+                    reapplySpell(core.magic.spells.records["tce_summon_skeletal_minion"].id, {0}, item.recordId)
+                    -- reapplySpell(spell.id, missingEffectIds.summon, item)
                 end
             end
         end
@@ -138,6 +143,13 @@ end
 -- heart of the thing
 time.runRepeatedly(main, 3 * time.second)
 
+
+-- REWRITE THIS FUCKER
+-- run only on equipment updates
+-- second rewrite time!
+-- work around active/should be active counts
+-- write it properly from the start, since fuck it
+-- fill the .omwaddon spell list
 
 -- return {
 --     engineHandlers = {
