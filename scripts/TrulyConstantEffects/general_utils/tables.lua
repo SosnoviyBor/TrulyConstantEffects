@@ -35,26 +35,33 @@ end
 function PrintTable(list)
     if not TableIsEmpty(list) then
         for k, v in pairs(list) do
-            print("> key: "..tostring(k).." | value: "..tostring(v))
+            print("> key: " .. tostring(k) .. " | value: " .. tostring(v))
         end
         print("")
     else
-        print("Provided "..tostring(list).." was empty")
+        print("Provided " .. tostring(list) .. " was empty")
+        print("")
     end
-end
-
----TODO
----
----Recursively prints the table in the console.
----
----@param list table
-function PrintTableRecursive(list)
-    
 end
 
 ---Returns copy of the provided table.
 ---@param list table
 ---@return table
 function CopyTable(list)
-    return {table.unpack(list)}
+    return { table.unpack(list) }
+end
+
+---Check if both tables have same values
+---@param t1 table
+---@param t2 table
+---@return boolean
+function TablesAreSame(t1, t2)
+    if #t1 ~= #t2 then return false end
+    for k, v in pairs(t1) do
+        if t2[k] ~= v then return false end
+    end
+    for k, v in pairs(t2) do
+        if t1[k] ~= v then return false end
+    end
+    return true
 end
