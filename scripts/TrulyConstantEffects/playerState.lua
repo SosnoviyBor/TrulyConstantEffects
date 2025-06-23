@@ -1,11 +1,13 @@
 local omw_self = require("openmw.self")
 local types = require("openmw.types")
+local core = require("openmw.core")
 local ui = require("openmw.ui")
 
 require("scripts.TrulyConstantEffects.utils")
 
 ---@class PlayerState
 ---@field spellEffectCounts table
+---@field enchEffectCounts table
 PlayerState = {}
 
 ---PlayerState constructor
@@ -16,6 +18,7 @@ function PlayerState:new()
     public.enchEffectCounts = CountEffects().enchEffectCounts
 
     local private = {}
+    private.l10n = core.l10n("TrulyConstantEffects")
 
     ---Checks if state is up to date
     ---
@@ -64,12 +67,18 @@ function PlayerState:new()
         for spellId, count in pairs(private:getEffectDifference()) do
             if count < 0 then
                 -- remove count spells
-                -- for _ = 0, count - 1 do
-                --     types.Actor.activeSpells(omw_self):remove()
-                -- end
+                if showMessages then ui.showMessage(private.l10n("removeSpell_message")) end
+                for _ = count + 1, 0 do
+                    for _, spellParams in pairs(types.Actor.activeSpells(omw_self)) do
+                        if spellParams.id == "tce_" .. spellId then
+                            types.Actor.activeSpells(omw_self):remove(spellParams.activeSpellId)
+                        end
+                    end
+                end
+
             elseif count > 0 then
                 -- add count spells
-                if showMessages then ui.showMessage("Reapplying spells...") end
+                if showMessages then ui.showMessage(private.l10n("addSpell_message")) end
                 for _ = 0, count - 1 do
                     types.Actor.activeSpells(omw_self):add({
                         id = "tce_" .. spellId,

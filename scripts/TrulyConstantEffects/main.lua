@@ -1,4 +1,4 @@
-require("scripts.TrulyConstantEffects.player_state")
+require("scripts.TrulyConstantEffects.playerState")
 
 local playerState
 local isSecondFrame = false

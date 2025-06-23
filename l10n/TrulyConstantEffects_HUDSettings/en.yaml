@@ -1,0 +1,10 @@
+page_name: "Truly Constant Effects"
+page_description: "Reapplies invisibility and summon effects from constant enchanted equipment."
+
+group_name: "General"
+invis_name: "Ignore Insibility"
+invis_description: "default = false"
+summons_name: "Ignore Summons"
+summons_description: "default = false"
+showMessages_name: "Enable messages"
+showMessages_description: "default = false"
