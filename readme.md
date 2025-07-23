@@ -13,12 +13,6 @@ Do whatever you want with the mod and its guts, just credit me. No need to ask, 
 Don't be a dick.
 
 ## Credits:
-- **Grey, S3ctor and others in OpenMW development chat** - helping in learning modding and OpenMW Lua API
+- **Grey, S3ctor and others in OpenMW Lua development chat** - helping in learning modding and OpenMW Lua API
 - **Uvirith's Legacy dev team** - giving an idea for the mod
 - **OpenMW community** - inspiring me
- 
-## TODO
-- [x] ~~Reimplement main functionality~~
-- [x] ~~Migrate from timer to state-based events~~
-- [ ] Add config menu
-- [ ] Add spell type exclusion (invis, summons)
