@@ -137,12 +137,17 @@ function CountEffects()
     for _, spell in pairs(types.Actor.activeSpells(omw_self)) do
         if string.find(spell.id, "^tce_") then
             local effect = spell.effects[1]
+            
+            -- no clue how a spell can have no effects, but sure
+            if effect == nil then goto continue end
+
             if spellEffectCounts[effect.id] == nil then
                 spellEffectCounts[effect.id] = 1
             else
                 spellEffectCounts[effect.id] = spellEffectCounts[effect.id] + 1
             end
         end
+        ::continue::
     end
 
     return {

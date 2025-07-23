@@ -1,14 +1,15 @@
+-- version: 1.0
+
 require("scripts.TrulyConstantEffects.playerState")
 
 local playerState
 local isSecondFrame = false
-local showMessages = true
 
 return {
     engineHandlers = {
         onUpdate = function()
             if not playerState:isUpToDate() and isSecondFrame then
-                playerState:updateSpells(showMessages)
+                playerState:updateSpells()
                 isSecondFrame = false
             else
                 -- i need one additional frame to refresh the state

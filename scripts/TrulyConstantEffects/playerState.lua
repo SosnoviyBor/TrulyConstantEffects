@@ -1,3 +1,4 @@
+local storage = require('openmw.storage')
 local omw_self = require("openmw.self")
 local types = require("openmw.types")
 local core = require("openmw.core")
@@ -62,12 +63,12 @@ function PlayerState:new()
     end
 
     ---Adds or removes spell, depending on the private:getEffectDifference()
-    ---@param showMessages boolean
-    function public:updateSpells(showMessages)
+    function public:updateSpells()
+        local settings = storage.playerSection("SettingsTrulyConstantEffects")
         for spellId, count in pairs(private:getEffectDifference()) do
             if count < 0 then
+                if settings:get("showMessages") then ui.showMessage(private.l10n("removeSpell_message")) end
                 -- remove count spells
-                if showMessages then ui.showMessage(private.l10n("removeSpell_message")) end
                 for _ = count + 1, 0 do
                     for _, spellParams in pairs(types.Actor.activeSpells(omw_self)) do
                         if spellParams.id == "tce_" .. spellId then
@@ -75,10 +76,12 @@ function PlayerState:new()
                         end
                     end
                 end
-
-            elseif count > 0 then
+            elseif count > 0 and (
+                    (spellId == "invisibility" and settings:get("reapplyInvis"))
+                    or (spellId ~= "invisibility" and settings:get("reapplySummons"))
+                ) then
+                if settings:get("showMessages") then ui.showMessage(private.l10n("addSpell_message")) end
                 -- add count spells
-                if showMessages then ui.showMessage(private.l10n("addSpell_message")) end
                 for _ = 0, count - 1 do
                     types.Actor.activeSpells(omw_self):add({
                         id = "tce_" .. spellId,

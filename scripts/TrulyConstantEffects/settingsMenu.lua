@@ -15,18 +15,18 @@ I.Settings.registerGroup {
     permanentStorage = true,
     settings = {
         {
-            key = 'invis',
-            name = 'invis_name',
-            description = 'invis_description',
+            key = 'reapplyInvis',
+            name = 'reapplyInvis_name',
+            description = 'reapplyInvis_description',
             renderer = 'checkbox',
-            default = false,
+            default = true,
         },
         {
-            key = 'summons',
-            name = 'summons_name',
-            description = 'summons_description',
+            key = 'reapplySummons',
+            name = 'reapplySummons_name',
+            description = 'reapplySummons_description',
             renderer = 'checkbox',
-            default = false,
+            default = true,
         },
         {
             key = 'showMessages',

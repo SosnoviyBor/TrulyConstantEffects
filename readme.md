@@ -22,4 +22,3 @@ Don't be a dick.
 - [x] ~~Migrate from timer to state-based events~~
 - [ ] Add config menu
 - [ ] Add spell type exclusion (invis, summons)
-- [ ] Add delay support
